@@ -1,0 +1,11 @@
+server:
+  port: 8666
+  error:
+    include-message: ALWAYS
+
+spring:
+  application:
+    name: contact
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
