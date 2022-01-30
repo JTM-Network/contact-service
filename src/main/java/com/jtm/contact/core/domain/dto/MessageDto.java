@@ -13,4 +13,5 @@ public class MessageDto {
     private String lastName;
     private String emailAddress;
     private String message;
+    private String domain;
 }

@@ -31,8 +31,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation ('org.springframework.boot:spring-boot-starter-test')
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'io.projectreactor:reactor-test'

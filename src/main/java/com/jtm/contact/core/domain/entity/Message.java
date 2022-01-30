@@ -55,6 +55,6 @@ public class Message {
      * @return boolean      if the user can message again
      */
     public boolean canMessage() {
-        return System.currentTimeMillis() < (this.sentTime + TimeUnit.HOURS.toMillis(1));
+        return System.currentTimeMillis() > (this.sentTime + TimeUnit.HOURS.toMillis(1));
     }
 }
