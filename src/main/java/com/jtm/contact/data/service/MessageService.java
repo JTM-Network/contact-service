@@ -35,7 +35,7 @@ public class MessageService {
                 .next()
                 .flatMap(msg -> {
                     if (!msg.canMessage()) return Mono.error(MessageLimitReached::new);
-                    return messageRepository.save(new Message(dto, "domain", clientAddress));
+                    return messageRepository.save(new Message(dto, clientAddress));
                 });
     }
 

@@ -44,8 +44,8 @@ public class Message {
         this.sentTime = sentTime;
     }
 
-    public Message(MessageDto dto, String domain, String clientAddress) {
-        this(dto.getFirstName(), dto.getLastName(), dto.getEmailAddress(), dto.getMessage(), domain, clientAddress);
+    public Message(MessageDto dto, String clientAddress) {
+        this(dto.getFirstName(), dto.getLastName(), dto.getEmailAddress(), dto.getMessage(), dto.getDomain(), clientAddress);
     }
 
     /**
