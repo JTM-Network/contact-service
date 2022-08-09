@@ -26,3 +26,4 @@ hs_err_pid*
 build
 .gradle
 src/main/resources/application-dev.yaml
+bin
