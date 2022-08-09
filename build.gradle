@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "com.palantir.docker" version "0.28.0"
     id 'java'
 }
 
@@ -28,16 +29,24 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'junit:junit:4.13.2'
 }
 
 jar {
     enabled = false
+}
+
+docker {
+    name "drennydev/${project.name}:${project.version}"
+    tags "latest"
+    tag 'DockerHub', "drennydev/${project.name}:${project.version}"
+    files tasks.testClasses.outputs, tasks.bootJar.outputs, "build/libs/${bootJar.archiveFileName.get()}"
+    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
 }

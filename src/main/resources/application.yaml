@@ -1,5 +1,5 @@
 server:
-  port: 8666
+  port: 9666
   error:
     include-message: ALWAYS
 
