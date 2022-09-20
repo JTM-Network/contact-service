@@ -27,17 +27,16 @@ public class MessageService {
     }
 
     public Mono<Message> insertMessage(ServerHttpRequest request, MessageDto dto) {
-        InetSocketAddress remoteAddress = request.getRemoteAddress();
-        if (remoteAddress == null) return Mono.error(FailedRemoteAddress::new);
-        String clientAddress = remoteAddress.getAddress().getHostAddress();
-        return messageRepository.findByClientAddress(clientAddress)
+        if (!request.getHeaders().containsKey("CLIENT_ADDRESS")) return Mono.error(FailedRemoteAddress::new);
+        String address = request.getHeaders().getFirst("CLIENT_ADDRESS");
+        return messageRepository.findByClientAddress(address)
                 .sort(Comparator.comparingLong(Message::getSentTime).reversed())
                 .next()
                 .flatMap(msg -> {
                     if (!msg.canMessage()) return Mono.error(MessageLimitReached::new);
-                    return messageRepository.save(new Message(dto, clientAddress));
+                    return messageRepository.save(new Message(dto, address));
                 })
-                .switchIfEmpty(Mono.defer(() -> messageRepository.save(new Message(dto, clientAddress))));
+                .switchIfEmpty(Mono.defer(() -> messageRepository.save(new Message(dto, address))));
     }
 
     public Mono<Message> getMessage(UUID id) {

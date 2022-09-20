@@ -9,6 +9,7 @@ import com.jtm.contact.core.usecase.repository.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
@@ -32,15 +33,20 @@ public class MessageServiceTest {
     private final Message jamie = new Message("jamie", "jenkins", "jamijenkins@gmail.com", "Test", "joetymatthews.com", "localhost", (System.currentTimeMillis() - TimeUnit.HOURS.toMillis(5)));
     private final MessageDto dto = new MessageDto("test", "hi", "testhi@gmail.com", "truth", "joetymatthews.com");
     private final ServerHttpRequest request = mock(ServerHttpRequest.class);
+    private final HttpHeaders headers = mock(HttpHeaders.class);
 
     @Before
     public void setup() {
         when(request.getRemoteAddress()).thenReturn(new InetSocketAddress("localhost", 3567));
+        when(request.getHeaders()).thenReturn(headers);
+
+        when(headers.containsKey(anyString())).thenReturn(true);
+        when(headers.getFirst(anyString())).thenReturn("127.0.0.1");
     }
 
     @Test
     public void insertMessage_thenRemoteAddressNull() {
-        when(request.getRemoteAddress()).thenReturn(null);
+        when(headers.containsKey(anyString())).thenReturn(false);
 
         Mono<Message> returned = messageService.insertMessage(request, dto);
 
@@ -61,6 +67,23 @@ public class MessageServiceTest {
         StepVerifier.create(returned)
                 .expectError(MessageLimitReached.class)
                 .verify();
+    }
+
+    @Test
+    public void insertMessage_whenEmpty() {
+        when(messageRepository.findByClientAddress(anyString())).thenReturn(Flux.empty());
+        when(messageRepository.save(any())).thenReturn(Mono.just(message));
+
+        Mono<Message> returned = messageService.insertMessage(request, dto);
+
+        verify(messageRepository, times(1)).findByClientAddress(anyString());
+        verifyNoMoreInteractions(messageRepository);
+
+        StepVerifier.create(returned)
+                .assertNext(next -> {
+                    assertThat(next.getClientAddress()).isEqualTo("localhost");
+                })
+                .verifyComplete();
     }
 
     @Test
