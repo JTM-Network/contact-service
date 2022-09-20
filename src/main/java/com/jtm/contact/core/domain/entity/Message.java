@@ -2,6 +2,7 @@ package com.jtm.contact.core.domain.entity;
 
 import com.jtm.contact.core.domain.dto.MessageDto;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Data
 @Document("messages")
+@NoArgsConstructor
 public class Message {
 
     @Id
