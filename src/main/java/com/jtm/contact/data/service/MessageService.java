@@ -33,11 +33,11 @@ public class MessageService {
         return messageRepository.findByClientAddress(clientAddress)
                 .sort(Comparator.comparingLong(Message::getSentTime).reversed())
                 .next()
-                .switchIfEmpty(Mono.defer(() -> messageRepository.save(new Message(dto, clientAddress))))
                 .flatMap(msg -> {
                     if (!msg.canMessage()) return Mono.error(MessageLimitReached::new);
                     return messageRepository.save(new Message(dto, clientAddress));
-                });
+                })
+                .switchIfEmpty(Mono.defer(() -> messageRepository.save(new Message(dto, clientAddress))));
     }
 
     public Mono<Message> getMessage(UUID id) {
