@@ -1,2 +1,2 @@
 # Contact Service
-Send an email message to registered email addresses from the contact forms on websites under JTM Network 
+Send a notification message to admin users on the JTM Network from contact us forms used on my websites.
