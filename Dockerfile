@@ -3,7 +3,7 @@ COPY --chown=gradle:gradle . /home/gradle/src/producer
 WORKDIR /home/gradle/src/producer
 RUN gradle bootJar --no-daemon --stacktrace
 
-FROM openjdk:16.0-buster
+FROM openjdk:17.0-buster
 VOLUME /tmp
 
 ARG JAR_FILE=build/libs/*.jar
